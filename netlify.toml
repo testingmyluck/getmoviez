@@ -10,3 +10,4 @@
   for = "/.netlify/functions/*"
   [headers.values]
   Access-Control-Allow-Origin = "https://hdxxx-videoz.blogspot.com, https://www.hotnippy.com"
+ 
