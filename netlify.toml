@@ -1,0 +1,24 @@
+[build]
+  command = "npm install"  # Replace with the appropriate build command, if needed
+  functions = "netlify_functions"  # Directory containing your serverless functions
+
+[dev]
+  functions = "netlify_functions"  # Directory containing your serverless functions
+
+[[redirects]]
+  from = "/.netlify/functions/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+  Access-Control-Allow-Origin = "https://hdxxx-videoz.blogspot.com, https://www.hotnippy.com"
+
+# Uncomment the following if you need additional environment variables
+# [build.environment]
+#   VARIABLE_NAME = "value"
+
+# Uncomment the following if you need environment variables for the functions
+# [build.environment]
+#   VARIABLE_NAME = "value"
