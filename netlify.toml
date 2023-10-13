@@ -1,0 +1,8 @@
+[build]
+  command = "npm run build"  # Replace with the build command for your front-end if you have one
+
+[context.production.environment]
+  FLASK_APP = "app.py"  # Replace with the correct entry point of your Flask app
+
+[context.production]
+  command = "python -m flask run"
