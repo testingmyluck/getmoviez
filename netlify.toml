@@ -1,3 +1,16 @@
 [build]
   functions = "netlify_functions"
   command = "echo 'No build step required for functions'"
+
+[build.environment]
+  PYTHON_VERSION = "3.7"  # Replace with the appropriate Python version
+
+[[plugins]]
+  package = "@netlify/plugin-functions-core"
+
+[context.production.environment]
+  # Add environment variables for production (if needed)
+
+[context.deploy-preview]
+  [context.deploy-preview.environment]
+    # Add environment variables for deploy previews (if needed)
