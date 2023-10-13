@@ -4,5 +4,3 @@
 [context.production.environment]
   FLASK_APP = "hls_extractor.py"  # Replace with the correct entry point of your Flask app
 
-[context.production]
-  command = "python -m flask run"
