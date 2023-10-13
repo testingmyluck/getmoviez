@@ -1,5 +1,3 @@
 [build]
   functions = "netlify_functions"
-
-[dev]
-  functions = "netlify_functions"
+  command = "echo 'No build step required for functions'"
