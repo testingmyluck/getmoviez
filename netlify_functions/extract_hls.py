@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, jsonify
 from bs4 import BeautifulSoup
 import re
@@ -8,10 +9,17 @@ import random
 
 app = Flask(__name__)
 
-# Configure CORS to allow requests from multiple websites
-CORS(app, resources={r"/.netlify/functions/extract_hls": {"origins": ["https://hdxxx-videoz.blogspot.com", "https://www.hotnippy.com"]}})
+# Get the port number from the PORT environment variable, or use a default value (5000)
+port = int(os.environ.get("PORT", 5000))
 
-@app.route('/.netlify/functions/extract_hls', methods=['GET'])
+# Configure CORS to allow requests from multiple websites
+CORS(app, resources={
+    r"/extract_hls": {
+        "origins": ["https://hdxxx-videoz.blogspot.com", "https://www.hotnippy.com"]
+    }
+})
+
+@app.route('/extract_hls', methods=['GET'])
 def extract_hls():
     try:
         video_url = request.args.get('video_url')
@@ -36,7 +44,7 @@ def extract_hls():
                     match = re.search(r"html5player\.setVideoHLS\('([^']+)'\)", script_text)
                     if match:
                         hls_url = match.group(1)
-
+                
                 # Extract 'html5player.setVideoUrlHigh' argument
                 if 'html5player.setVideoUrlHigh' in script_text:
                     match = re.search(r"html5player\.setVideoUrlHigh\('([^']+)'\)", script_text)
@@ -68,3 +76,7 @@ def extract_hls():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+if __name__ == '__main__':
+    # Run the app on the specified port (Glitch expects port 3000)
+    app.run(host='0.0.0.0', port=3000)
