@@ -1,0 +1,22 @@
+[build]
+  command = "python -m pip install -r functions/requirements.txt && npx serverless -v"
+  functions = "functions"
+  publish = "static"
+
+[build.environment]
+  FLASK_ENV = "production"
+  PORT = 9000
+  NETLIFY = "true"
+  PYTHONUNBUFFERED = "1"
+
+[context.production.environment]
+  NETLIFY = "true"
+
+[context.deploy-preview.environment]
+  NETLIFY = "true"
+
+[context.branch-deploy.environment]
+  NETLIFY = "true"
+
+[context.next.environment]
+  NETLIFY = "true"
