@@ -1,31 +1,18 @@
-import os
-from flask import Flask, request, jsonify
+# functions/extract_hls.py
+import json
 from bs4 import BeautifulSoup
 import re
-import json
 import requests
-from flask_cors import CORS
-import random
 
-app = Flask(__name__)
-
-# Get the port number from the PORT environment variable, or use a default value (5000)
-port = int(os.environ.get("PORT", 5000))
-
-# Configure CORS to allow requests from multiple websites
-CORS(app, resources={
-    r"/extract_hls": {
-        "origins": ["https://hdxxx-videoz.blogspot.com", "https://www.hotnippy.com"]
-    }
-})
-
-@app.route('/extract_hls', methods=['GET'])
-def extract_hls():
+def handler(event, context):
     try:
-        video_url = request.args.get('video_url')
+        video_url = event.get('queryStringParameters', {}).get('video_url')
 
         if not video_url:
-            return jsonify({"error": "Video URL parameter is missing."}), 400
+            return {
+                'statusCode': 400,
+                'body': json.dumps({"error": "Video URL parameter is missing."})
+            }
 
         response = requests.get(video_url)
 
@@ -44,22 +31,18 @@ def extract_hls():
                     match = re.search(r"html5player\.setVideoHLS\('([^']+)'\)", script_text)
                     if match:
                         hls_url = match.group(1)
-                
-                # Extract 'html5player.setVideoUrlHigh' argument
+
                 if 'html5player.setVideoUrlHigh' in script_text:
                     match = re.search(r"html5player\.setVideoUrlHigh\('([^']+)'\)", script_text)
                     if match:
                         video_url_high = match.group(1)
 
-            # Find the <div> with id="v-views"
             v_views_div = video_page.find('div', {'id': 'v-views'})
             if v_views_div:
-                # Extract mobile_show_inline within <strong class="mobile-show-inline">
                 mobile_show_inline_element = v_views_div.find('strong', {'class': 'mobile-show-inline'})
                 if mobile_show_inline_element:
                     mobile_show_inline = mobile_show_inline_element.get_text().strip()
 
-            # Generate a random rating in the range of 70% to 100%
             rating_good_perc = str(random.randint(70, 100)) + '%'
 
             video_info = {
@@ -69,14 +52,19 @@ def extract_hls():
                 "rating_good_perc": rating_good_perc,
             }
 
-            return jsonify(video_info), 200
+            return {
+                'statusCode': 200,
+                'body': json.dumps(video_info),
+            }
 
         else:
-            return jsonify({"error": "Failed to retrieve the video page."}), response.status_code
+            return {
+                'statusCode': response.status_code,
+                'body': json.dumps({"error": "Failed to retrieve the video page."}),
+            }
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-if __name__ == '__main__':
-    # Run the app on the specified port (Glitch expects port 3000)
-    app.run(host='0.0.0.0', port=3000)
+        return {
+            'statusCode': 500,
+            'body': json.dumps({"error": str(e)}),
+        }
