@@ -1,22 +1,22 @@
 [build]
-  command = "python -m pip install -r functions/requirements.txt && npx serverless -v"
-  functions = "functions"
-  publish = "static"
+  # This command will build your project and install dependencies
+  command = "pip install -r requirements.txt"
 
-[build.environment]
-  FLASK_ENV = "production"
-  PORT = 9000
-  NETLIFY = "true"
-  PYTHONUNBUFFERED = "1"
+  # The publish directory is the output of your build process.
+  # Since your project is a serverless function, set it to the root directory.
+  publish = "hlstest/netlify_functions"
 
-[context.production.environment]
-  NETLIFY = "true"
+[[redirects]]
+  # Redirect requests to your serverless function
+  from = "/.netlify/functions/extract_hls"
+  to = "hlstest/netlify_functions/extract_hls.py"
 
-[context.deploy-preview.environment]
-  NETLIFY = "true"
+[[headers]]
+  # Configure response headers for your serverless function
+  for = "/.netlify/functions/extract_hls.py"
+    [headers.values]
+    Access-Control-Allow-Origin = "https://hdxxx-videoz.blogspot.com, https://www.hotnippy.com"
 
-[context.branch-deploy.environment]
-  NETLIFY = "true"
-
-[context.next.environment]
-  NETLIFY = "true"
+[context.functions]
+  # Define your serverless function(s)
+  extract_hls = "hlstest/netlify_functions/extract_hls.handler"
