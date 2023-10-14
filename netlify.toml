@@ -1,21 +1,3 @@
 [build]
-  # This command will build your project and install dependencies
-  command = "pip install -r requirements.txt"
-
-  # The publish directory should be the root directory where your serverless function is located.
-  publish = "hlstest/netlify_functions"
-
-[[redirects]]
-  # Redirect requests to your serverless function
-  from = "/.netlify/functions/extract_hls"
-  to = "hlstest/netlify_functions/extract_hls.py"
-
-[[headers]]
-  # Configure response headers for your serverless function
-  for = "/.netlify/functions/extract_hls.py"
-  [headers.values]
-    Access-Control-Allow-Origin = "https://hdxxx-videoz.blogspot.com, https://www.hotnippy.com"
-
-[context.functions]
-  # Define your serverless function(s)
-  extract_hls = "hlstest/netlify_functions/extract_hls.handler"
+command = "python app.py"
+publish = "./"
