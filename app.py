@@ -36,6 +36,7 @@ def extract_hls():
 
             hls_url = ""
             video_url_high = ""
+            video_url_low = ""  # New variable for video_url_low
             mobile_show_inline = ""
 
             for script_tag in script_tags:
@@ -45,26 +46,29 @@ def extract_hls():
                     if match:
                         hls_url = match.group(1)
                 
-                # Extract 'html5player.setVideoUrlHigh' argument
                 if 'html5player.setVideoUrlHigh' in script_text:
                     match = re.search(r"html5player\.setVideoUrlHigh\('([^']+)'\)", script_text)
                     if match:
                         video_url_high = match.group(1)
+                
+                # Extract 'html5player.setVideoUrlLow' argument
+                if 'html5player.setVideoUrlLow' in script_text:
+                    match = re.search(r"html5player\.setVideoUrlLow\('([^']+)'\)", script_text)
+                    if match:
+                        video_url_low = match.group(1)
 
-            # Find the <div> with id="v-views"
             v_views_div = video_page.find('div', {'id': 'v-views'})
             if v_views_div:
-                # Extract mobile_show_inline within <strong class="mobile-show-inline">
                 mobile_show_inline_element = v_views_div.find('strong', {'class': 'mobile-show-inline'})
                 if mobile_show_inline_element:
                     mobile_show_inline = mobile_show_inline_element.get_text().strip()
 
-            # Generate a random rating in the range of 70% to 100%
             rating_good_perc = str(random.randint(70, 100)) + '%'
 
             video_info = {
                 "hls_url": hls_url,
                 "video_url_high": video_url_high,
+                "video_url_low": video_url_low,  # Include video_url_low in the response
                 "mobile_show_inline": mobile_show_inline,
                 "rating_good_perc": rating_good_perc,
             }
@@ -77,6 +81,3 @@ def extract_hls():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-if __name__ == '__main__':
-    # Run the app on the specified port
-    app.run(host='0.0.0.0', port=port)
