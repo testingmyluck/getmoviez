@@ -12,10 +12,11 @@ port = int(os.environ.get("PORT", 5000))
 
 # Configure CORS to allow requests from multiple websites
 CORS(app, resources={
-    r"/get_post_id": {
-        "origins": ["https://www.boobstube.xyz", "https://www.hotnippy.com"]
+    r"/get_post_data": {
+        "origins": ["https://www.boobstube.xyz", "https://www.hotnippy.com", "https://gettinpostid.vercel.app"]
     }
 })
+
 
 def extract_post_id(api_key, blog_id, post_url):
     post_path = post_url.replace('https://www.hotnippy.com', '')
