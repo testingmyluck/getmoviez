@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS 
 import requests
 
 app = Flask(__name__)
+CORS(app) 
 
 def extract_post_labels(api_key, blog_id, post_url):
     post_path = post_url.replace('https://www.hotnippy.com', '')
@@ -28,7 +30,9 @@ def get_labels():
     labels = extract_post_labels(api_key, blog_id, post_url)
 
     if labels is not None:
-        return jsonify({'labels': labels})
+        response = jsonify({'labels': labels})
+        response.headers.add('Access-Control-Allow-Origin', '*')  # Allow requests from any origin
+        return response
     else:
         return jsonify({'error': 'Failed to retrieve labels'}), 500
 
