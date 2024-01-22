@@ -23,9 +23,9 @@ def extract_post_labels(api_key, blog_id, post_url):
 
 @app.route('/get_labels', methods=['GET'])
 def get_labels():
-    api_key = request.args.get('api_key')
-    blog_id = request.args.get('blog_id')
-    post_url = request.args.get('post_url')
+    api_key = 'AIzaSyBoE_mDhkMHdUgwvpoK3RcKbAPAsOu9Muk'
+    blog_id = '6331170148874248090'
+    post_url = request.args.get('url')
 
     labels = extract_post_labels(api_key, blog_id, post_url)
 
